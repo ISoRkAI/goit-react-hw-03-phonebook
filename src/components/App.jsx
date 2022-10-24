@@ -10,6 +10,7 @@ class App extends Component {
       { id: shortid.generate(), name: 'Rosie Simpson', number: '459-12-56' },
       { id: shortid.generate(), name: 'Hermione Kline', number: '443-89-12' },
       { id: shortid.generate(), name: 'Eden Clements', number: '645-17-79' },
+
       { id: shortid.generate(), name: 'Annie Copeland', number: '227-91-26' },
     ],
     filter: '',
@@ -43,7 +44,18 @@ class App extends Component {
       contacts: prevState.contacts.filter(contact => contact.id !== contactId),
     }));
   };
-
+  componentDidMount() {
+    const contacts = localStorage.getItem('contacts');
+    const parsedContacts = JSON.parse(contacts);
+    if (parsedContacts) {
+      this.setState({ contacts: parsedContacts });
+    }
+  }
+  componentDidUpdate(_, prevState) {
+    if (this.state.contacts !== prevState.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
   render() {
     const filterContact = this.state.contacts.filter(contact => {
       return contact.name
